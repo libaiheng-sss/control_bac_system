@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: rm-2vcg83ybq4f2k1prxoo.mysql.cn-chengdu.rds.aliyuncs.com
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: dev_libh
+    password: bhsf234nhs@A
