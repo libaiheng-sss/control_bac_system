@@ -1,6 +1,8 @@
 spring:
   datasource:
-    url: rm-2vcg83ybq4f2k1prxoo.mysql.cn-chengdu.rds.aliyuncs.com
+    url: jdbc:mysql://rm-2vcg83ybq4f2k1prxoo.mysql.cn-chengdu.rds.aliyuncs.com:3306/control_bac_system
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: dev_libh
+    username: root
     password: bhsf234nhs@A
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

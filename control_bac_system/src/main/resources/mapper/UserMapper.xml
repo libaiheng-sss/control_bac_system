@@ -1,0 +1,8 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.control_bac_system.mapper.UserMapper">
+    <select id="selectUserByUsername" parameterType="java.lang.String" resultType="com.example.control_bac_system.entity.User">
+        select id,username,password,phoneNumber,email,updateTime,createTime from user where username = #{username}
+    </select>
+</mapper>
