@@ -3,7 +3,7 @@ package com.example.control_bac_system.entity;
 import lombok.Data;
 
 @Data
-public class User {
+public class UserInfo {
 
     private Integer id;
     private String username;
