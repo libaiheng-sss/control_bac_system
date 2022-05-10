@@ -117,6 +117,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             hashMap.put("expires_time", expDate);
             hashMap.put("access_token", jwt);
             hashMap.put("type", "bearer");
+            hashMap.put("code", "2000");
             ObjectMapper objectMapper = new ObjectMapper();
             String s = objectMapper.writeValueAsString(hashMap);
             PrintWriter printWriter = httpServletResponse.getWriter();

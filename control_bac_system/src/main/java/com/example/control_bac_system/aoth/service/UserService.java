@@ -25,7 +25,7 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if (StrUtil.isNotBlank(username)){
+        if (!StrUtil.isNotBlank(username)){
             throw new UsernameNotFoundException("用户名不存在！");
         }
         UserInfo userInfo = userMapper.selectUserByUsername(username);

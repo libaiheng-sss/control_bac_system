@@ -29,7 +29,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String path = httpServletRequest.getRequestURI();
         String method = httpServletRequest.getMethod();
         // 对于登录直接放行
-        if ("/login".equals(path) && "POST".equals(method)) {
+        if ("/dev-api/login".equals(path) && "POST".equals(method)) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }

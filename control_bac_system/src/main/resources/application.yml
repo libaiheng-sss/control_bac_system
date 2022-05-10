@@ -6,3 +6,6 @@ spring:
     password: bhsf234nhs@A
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+server:
+  servlet:
+    context-path: /dev-api
