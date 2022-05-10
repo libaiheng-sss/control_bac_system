@@ -19,12 +19,12 @@ public interface UserMapper {
 
     List<UserInfo> selectAllUserInfo();
 
-    int createUser(UserInfo userInfo);
+    int createUser(@Param("userInfo") UserInfo userInfo);
 
-    int updateUser(UserInfo userInfo);
+    int updateUser(@Param("userInfo") UserInfo userInfo);
 
-    int deleteUser(Integer userId);
+    int deleteUser(@Param("userId") Integer userId);
 
-    int updatePassword(UserInfo userInfo);
+    int updatePassword(@Param("userInfo") UserInfo userInfo);
 
 }

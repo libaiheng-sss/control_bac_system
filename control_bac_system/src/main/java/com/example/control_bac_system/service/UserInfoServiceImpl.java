@@ -2,6 +2,7 @@ package com.example.control_bac_system.service;
 
 import com.example.control_bac_system.entity.UserInfo;
 import com.example.control_bac_system.mapper.UserMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,6 +13,8 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private PasswordEncoder passwordEncoder;
     @Override
     public List<UserInfo> getUserList() {
         List<UserInfo> userInfos = userMapper.selectAllUserInfo();
@@ -20,6 +23,11 @@ public class UserInfoServiceImpl implements UserInfoService{
 
     @Override
     public Integer createUser(UserInfo userInfo) {
+        Long currentTime = System.currentTimeMillis();
+        String encode = passwordEncoder.encode(userInfo.getPhoneNumber().substring(5, 11));
+        userInfo.setPassword(encode);
+        userInfo.setCreateTime(String.valueOf(currentTime));
+        userInfo.setUpdateTime(String.valueOf(currentTime));
         int userId = userMapper.createUser(userInfo);
         return userId;
     }

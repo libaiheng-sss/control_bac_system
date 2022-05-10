@@ -16,8 +16,8 @@
             username,
             phoneNumber,
             email,
-            DATE_FORMAT(FROM_UNIXTIME(updateTime),'%Y-%m-%d %H:%i:%s') as updateTime,
-            DATE_FORMAT(FROM_UNIXTIME(createTime),'%Y-%m-%d %H:%i:%s') as createTime
+            DATE_FORMAT(FROM_UNIXTIME(updateTime/1000),'%Y-%m-%d %H:%i:%s') as updateTime,
+            DATE_FORMAT(FROM_UNIXTIME(createTime/1000),'%Y-%m-%d %H:%i:%s') as createTime
         from
             user;
     </select>
