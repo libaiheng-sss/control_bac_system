@@ -16,4 +16,12 @@ public class ResultModel {
         jsonObject.put("message",message);
         return jsonObject.toJSONString();
     }
+
+    public static String SUCCESS(String code,String message,Object data){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",code);
+        jsonObject.put("message",message);
+        jsonObject.put("data",data);
+        return jsonObject.toJSONString();
+    }
 }

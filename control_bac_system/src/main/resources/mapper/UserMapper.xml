@@ -5,4 +5,8 @@
     <select id="selectUserByUsername" parameterType="java.lang.String" resultType="com.example.control_bac_system.entity.UserInfo">
         select id,username,password,phoneNumber,email,updateTime,createTime from user where username = #{username}
     </select>
+
+    <select id="selectUserRoleByUserId" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select r.role_name from user_role ur left join role r on r.id = ur.role_id where ur.user_id = #{userId}
+    </select>
 </mapper>

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.control_bac_system.aoth.entity.User;
 import com.example.control_bac_system.aoth.filter.JwtTokenFilter;
+import com.example.control_bac_system.aoth.handler.MyLogOutSuccessHandler;
 import com.example.control_bac_system.aoth.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 import javax.annotation.Resource;
 import java.io.PrintWriter;
@@ -37,6 +39,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private JwtTokenFilter jwtTokenFilter;
 
+    @Resource
+    private MyLogOutSuccessHandler myLogOutSuccessHandler;
+
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -53,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtTokenFilter, LogoutFilter.class);
         // 禁用session
         http.sessionManagement().disable();
         http.csrf().disable();
@@ -66,6 +72,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/login").anonymous()
                 .anyRequest().authenticated();
+        http.logout()
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(myLogOutSuccessHandler)
+                .deleteCookies("JSESSIONID");
     }
 
     /**
