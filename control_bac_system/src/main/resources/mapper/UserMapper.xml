@@ -10,7 +10,7 @@
         select r.role_name from user_role ur left join role r on r.id = ur.role_id where ur.user_id = #{userId}
     </select>
 
-    <select id="selectAllUserInfo" resultType="com.example.control_bac_system.entity.UserInfo">
+    <select id="selectAllUserInfo" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.UserInfo">
         select
             id,
             username,
@@ -20,7 +20,32 @@
             DATE_FORMAT(FROM_UNIXTIME(updateTime/1000),'%Y-%m-%d %H:%i:%s') as updateTime,
             DATE_FORMAT(FROM_UNIXTIME(createTime/1000),'%Y-%m-%d %H:%i:%s') as createTime
         from
-            user;
+            user
+        <where>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                phoneNumber = #{pageQuery.phoneNumber}
+            </if>
+            <if test="pageQuery.status != null and pageQuery.status >= 0">
+                and status = #{pageQuery.status}
+            </if>
+        </where>
+        ORDER BY updateTime DESC
+        limit #{pageQuery.start},#{pageQuery.end}
+    </select>
+
+    <select id="selectUserTotal" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="java.lang.Integer">
+        select
+        count(1)
+        from
+        user
+        <where>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                phoneNumber = #{pageQuery.phoneNumber}
+            </if>
+            <if test="pageQuery.status != null and pageQuery.status >= 0">
+                and status = #{pageQuery.status}
+            </if>
+        </where>
     </select>
 
     <insert id="createUser" parameterType="com.example.control_bac_system.entity.UserInfo" useGeneratedKeys="true" keyProperty="id">

@@ -1,5 +1,7 @@
 package com.example.control_bac_system.service;
 
+import com.example.control_bac_system.entity.PageQuery;
+import com.example.control_bac_system.entity.PageQueryVo;
 import com.example.control_bac_system.entity.UserInfo;
 import com.example.control_bac_system.mapper.UserMapper;
 import org.springframework.data.relational.core.sql.In;
@@ -17,9 +19,28 @@ public class UserInfoServiceImpl implements UserInfoService{
     @Resource
     private PasswordEncoder passwordEncoder;
     @Override
-    public List<UserInfo> getUserList() {
-        List<UserInfo> userInfos = userMapper.selectAllUserInfo();
-        return userInfos;
+    public PageQueryVo getUserList(PageQuery pageQuery) {
+
+        Integer page = pageQuery.getPage();
+        Integer limit = pageQuery.getLimit();
+        Integer start = (page-1) * limit;
+        Integer end = page * limit;
+        int currentPage = 0;
+        Integer total = userMapper.selectUserTotal(pageQuery);
+        if (start >= total){
+            start = total - limit;
+            end = total;
+            currentPage = total/limit;
+        }
+        pageQuery.setStart(start);
+        pageQuery.setEnd(end);
+        List<UserInfo> userInfos = userMapper.selectAllUserInfo(pageQuery);
+        PageQueryVo<UserInfo> pageQueryVo = new PageQueryVo<>();
+        pageQueryVo.setTotal(total);
+        pageQueryVo.setList(userInfos);
+        pageQueryVo.setCurrentPage(currentPage);
+
+        return pageQueryVo;
     }
 
     @Override

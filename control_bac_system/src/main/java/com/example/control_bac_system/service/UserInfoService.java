@@ -1,12 +1,14 @@
 package com.example.control_bac_system.service;
 
+import com.example.control_bac_system.entity.PageQuery;
+import com.example.control_bac_system.entity.PageQueryVo;
 import com.example.control_bac_system.entity.UserInfo;
 
 import java.util.List;
 
 public interface UserInfoService {
 
-    List<UserInfo> getUserList();
+    PageQueryVo getUserList(PageQuery pageQuery);
 
     Integer createUser(UserInfo userInfo);
 

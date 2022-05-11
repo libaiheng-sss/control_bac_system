@@ -1,6 +1,8 @@
 package com.example.control_bac_system.controller;
 
 
+import com.example.control_bac_system.entity.PageQuery;
+import com.example.control_bac_system.entity.PageQueryVo;
 import com.example.control_bac_system.entity.UserInfo;
 import com.example.control_bac_system.model.ResultModel;
 import com.example.control_bac_system.service.UserInfoService;
@@ -19,10 +21,10 @@ public class UserController {
     @Resource
     private UserInfoService userInfoService;
 
-    @GetMapping("userList")
-    public String getUserList(){
-        List<UserInfo> userInfoList = userInfoService.getUserList();
-        String jsonStr = ResultModel.SUCCESS("200", "获取成功", userInfoList);
+    @PostMapping("userList")
+    public String getUserList(@RequestBody PageQuery pageQuery){
+        PageQueryVo pageQueryVo = userInfoService.getUserList(pageQuery);
+        String jsonStr = ResultModel.SUCCESS("200", "获取成功", pageQueryVo);
         return jsonStr;
     }
 
@@ -42,6 +44,7 @@ public class UserController {
     @DeleteMapping("deleteUser")
     public String deleteUser(@RequestParam(value="id") Integer id,@RequestParam(value="status") Integer status){
         Integer i = userInfoService.deleteUser(id,status);
-        return null;
+        String result = ResultModel.SUCCESS("200", "修改用户状态成功", i);
+        return result;
     }
 }
