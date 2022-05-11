@@ -40,8 +40,8 @@ public class UserController {
     }
 
     @DeleteMapping("deleteUser")
-    public String deleteUser(Integer id){
-        Integer i = userInfoService.deleteUser(id);
+    public String deleteUser(@RequestParam(value="id") Integer id,@RequestParam(value="status") Integer status){
+        Integer i = userInfoService.deleteUser(id,status);
         return null;
     }
 }

@@ -19,18 +19,8 @@ public class Tools {
     }
 
     public static void main(String[] args) {
-        UserInfo userInfo = new UserInfo();
-        userInfo.setId(1);
-        userInfo.setEmail("123");
-        userInfo.setUsername("amdin");
-        UserInfo userInfo2 = new UserInfo();
-        userInfo2.setId(2);
-        userInfo2.setEmail("热无法");
-        userInfo2.setUsername("水电费水电费");
-        List<UserInfo>  userInfoList = new ArrayList<>();
-        userInfoList.add(userInfo);
-        userInfoList.add(userInfo2);
-        String s = listToJsonStr(Collections.singletonList(userInfoList));
-        System.out.println(s);
+        String phoneNumber = "15213317526";
+        String substring = phoneNumber.substring(5, 11);
+        System.out.println(substring);
     }
 }

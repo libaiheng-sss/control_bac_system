@@ -16,6 +16,7 @@
             username,
             phoneNumber,
             email,
+            status,
             DATE_FORMAT(FROM_UNIXTIME(updateTime/1000),'%Y-%m-%d %H:%i:%s') as updateTime,
             DATE_FORMAT(FROM_UNIXTIME(createTime/1000),'%Y-%m-%d %H:%i:%s') as createTime
         from
@@ -28,9 +29,9 @@
         );
     </insert>
 
-    <delete id="deleteUser" parameterType="java.lang.Integer">
-        delete from user where id = #{userId}
-    </delete>
+    <update id="deleteUser" parameterType="java.lang.Integer">
+        update user set status=#{status} ,updateTime=UNIX_TIMESTAMP(NOW())*1000 where id = #{userId}
+    </update>
 
     <update id="updateUser" parameterType="com.example.control_bac_system.entity.UserInfo">
         update user set

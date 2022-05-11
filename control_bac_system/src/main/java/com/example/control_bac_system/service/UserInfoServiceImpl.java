@@ -2,6 +2,7 @@ package com.example.control_bac_system.service;
 
 import com.example.control_bac_system.entity.UserInfo;
 import com.example.control_bac_system.mapper.UserMapper;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +40,8 @@ public class UserInfoServiceImpl implements UserInfoService{
     }
 
     @Override
-    public Integer deleteUser(Integer id) {
-        int i = userMapper.deleteUser(id);
+    public Integer deleteUser(Integer id, Integer status) {
+        int i = userMapper.deleteUser(id,status);
         return i;
     }
 }

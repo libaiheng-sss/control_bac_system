@@ -23,7 +23,7 @@ public interface UserMapper {
 
     int updateUser(@Param("userInfo") UserInfo userInfo);
 
-    int deleteUser(@Param("userId") Integer userId);
+    int deleteUser(@Param("userId") Integer userId,@Param("userId") Integer status);
 
     int updatePassword(@Param("userInfo") UserInfo userInfo);
 

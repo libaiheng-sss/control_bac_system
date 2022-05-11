@@ -14,6 +14,7 @@ public class UserInfo {
     private String password;
     private String phoneNumber;
     private String email;
+    private Integer status;
     private String updateTime;
     private String createTime;
 }
