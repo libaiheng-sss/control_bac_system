@@ -13,7 +13,11 @@ public class PageQuery {
     private Integer end;
     private String beginTime;
     private String endTime;
+    private Integer id;
     // --------------user_list
     private String phoneNumber;
     private Integer status;
+    // -----------------product
+    private boolean hasChildren;
+
 }

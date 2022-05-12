@@ -22,15 +22,34 @@
     </select>
 
     <select id="selectProductByLimit" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.Product">
-        select
-            id,
-            productName,
-            productCode,
-            description,
-            DATE_FORMAT(FROM_UNIXTIME(createTime/1000),'%Y-%m-%d %H:%i:%s') as createTime
-        from
-            product
-        ORDER BY createTime DESC
-        limit #{pageQuery.start},#{pageQuery.end}
+        SELECT
+            x.id,
+            x.parent_id,
+            x.product_name,
+            x.product_code,
+            x.description,
+            x.price,
+            DATE_FORMAT( FROM_UNIXTIME( x.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) AS createTime,
+            IF(y.num>0,1,0) AS hasChildren
+        FROM
+                ( SELECT * FROM `product` WHERE parent_id = #{pageQuery.id} ) x
+                    LEFT JOIN (
+                SELECT
+                    a.id,
+                    COUNT( 1 ) AS num
+                FROM
+                        ( SELECT * FROM `product` WHERE parent_id = #{pageQuery.id} ) a
+                            LEFT JOIN product p ON a.id = p.parent_id
+                WHERE
+                    p.id IS NOT NULL
+                GROUP BY
+                    a.id
+            ) y ON x.id = y.id
+
+        ORDER BY create_time DESC
+        <if test="pageQuery.start > 0 and pageQuery.end > 0">
+            limit #{pageQuery.start},#{pageQuery.end}
+        </if>
+
     </select>
 </mapper>

@@ -4,6 +4,8 @@ import com.example.control_bac_system.entity.PageQuery;
 import com.example.control_bac_system.entity.PageQueryVo;
 import com.example.control_bac_system.entity.Product;
 
+import java.util.List;
+
 public interface ProductService {
 
     int addProduct(Product product);
@@ -11,4 +13,6 @@ public interface ProductService {
     int deleteProduct(Product product);
 
     PageQueryVo getProductList(PageQuery pageQuery);
+
+    List<Product> getChildrenList(PageQuery pageQuery);
 }

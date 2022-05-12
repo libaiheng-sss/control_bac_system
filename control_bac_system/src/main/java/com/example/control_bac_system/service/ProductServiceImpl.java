@@ -55,4 +55,10 @@ public class ProductServiceImpl implements ProductService{
 
         return pageQueryVo;
     }
+
+    @Override
+    public List<Product> getChildrenList(PageQuery pageQuery) {
+        List<Product> products = productMapper.selectProductByLimit(pageQuery);
+        return products;
+    }
 }

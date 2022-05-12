@@ -8,6 +8,7 @@ import com.example.control_bac_system.service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("product")
@@ -34,8 +35,15 @@ public class ProductController {
 
     @PostMapping("getList")
     public String getProductList(@RequestBody PageQuery pageQuery){
+        pageQuery.setId(0);
         PageQueryVo pageQueryVo = productService.getProductList(pageQuery);
         String result = ResultModel.SUCCESS("200", "获取产品列表", pageQueryVo);
+        return result;
+    }
+    @PostMapping("getChildrenList")
+    public String getChildrenList(@RequestBody PageQuery pageQuery){
+        List<Product> products = productService.getChildrenList(pageQuery);
+        String result = ResultModel.SUCCESS("200", "获取产品列表", products);
         return result;
     }
 }
