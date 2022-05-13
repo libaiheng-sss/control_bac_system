@@ -4,21 +4,35 @@
 <mapper namespace="com.example.control_bac_system.mapper.ProductMapper">
 
     <insert id="addProduct" parameterType="com.example.control_bac_system.entity.Product">
-        insert into product(productName,productCode,description,createTime)
+        insert into product(product_name,product_code,description,create_time,parent_id,price)
             value (
             #{product.productName},
             #{product.productCode},
             #{product.description},
-            #{product.createTime}
+            #{product.createTime},
+            #{product.parentId},
+            #{product.price}
             )
     </insert>
 
     <delete id="deleteProduct" parameterType="com.example.control_bac_system.entity.Product">
-        delete from product where id = #{product.id}
+        update product set status = 2 where id IN (select id from (select a.id from product a,(select @pid := #{product.id}) b where find_in_set(parent_id,@pid) > 0 and @pid := concat(@pid,',',id)
+                                                                   union select id from product where id = #{product.id}) c)
     </delete>
 
+    <update id="updateProduct" parameterType="com.example.control_bac_system.entity.Product">
+        update product
+        <trim prefix="set" suffixOverrides=",">
+                    <if test="product.productName != null and product.productName != ''">set product_name = #{product.productName},</if>
+                    <if test="product.description != null and product.description != ''"> description = #{product.description},</if>
+                    <if test="product.price != null and product.price >= 0>"> product_name = #{product.price},</if>
+                </trim>
+        where
+            id = #{product.id}
+    </update>
+
     <select id="selectProductTotal" resultType="java.lang.Integer">
-        select count(1) from product
+        select count(1) from product where parent_id = 0
     </select>
 
     <select id="selectProductByLimit" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.Product">

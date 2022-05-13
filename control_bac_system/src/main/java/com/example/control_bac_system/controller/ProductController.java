@@ -33,6 +33,13 @@ public class ProductController {
         return result;
     }
 
+    @DeleteMapping("update")
+    public String updateProduct(@RequestBody Product product){
+        int i = productService.updateProduct(product);
+        String result = ResultModel.SUCCESS("200", "删除产品成功", i);
+        return result;
+    }
+
     @PostMapping("getList")
     public String getProductList(@RequestBody PageQuery pageQuery){
         pageQuery.setId(0);

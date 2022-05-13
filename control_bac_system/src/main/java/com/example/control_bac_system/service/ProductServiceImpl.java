@@ -61,4 +61,10 @@ public class ProductServiceImpl implements ProductService{
         List<Product> products = productMapper.selectProductByLimit(pageQuery);
         return products;
     }
+
+    @Override
+    public int updateProduct(Product product) {
+        int i = productMapper.updateProduct(product);
+        return i;
+    }
 }

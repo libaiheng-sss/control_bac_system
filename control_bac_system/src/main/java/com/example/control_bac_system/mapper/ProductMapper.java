@@ -16,4 +16,6 @@ public interface ProductMapper {
     Integer selectProductTotal(@Param("pageQuery") PageQuery pageQuery);
 
     List<Product> selectProductByLimit(@Param("pageQuery")  PageQuery pageQuery);
+
+    int updateProduct(@Param("product") Product product);
 }

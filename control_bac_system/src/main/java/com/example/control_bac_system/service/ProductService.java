@@ -15,4 +15,6 @@ public interface ProductService {
     PageQueryVo getProductList(PageQuery pageQuery);
 
     List<Product> getChildrenList(PageQuery pageQuery);
+
+    int updateProduct(Product product);
 }
