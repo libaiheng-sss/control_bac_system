@@ -16,16 +16,16 @@
     </insert>
 
     <delete id="deleteProduct" parameterType="com.example.control_bac_system.entity.Product">
-        update product set status = 2 where id IN (select id from (select a.id from product a,(select @pid := #{product.id}) b where find_in_set(parent_id,@pid) > 0 and @pid := concat(@pid,',',id)
+        update product set status = 1 where id IN (select id from (select a.id from product a,(select @pid := #{product.id}) b where find_in_set(parent_id,@pid) > 0 and @pid := concat(@pid,',',id)
                                                                    union select id from product where id = #{product.id}) c)
     </delete>
 
     <update id="updateProduct" parameterType="com.example.control_bac_system.entity.Product">
         update product
         <trim prefix="set" suffixOverrides=",">
-                    <if test="product.productName != null and product.productName != ''">set product_name = #{product.productName},</if>
+                    <if test="product.productName != null and product.productName != ''">product_name = #{product.productName},</if>
                     <if test="product.description != null and product.description != ''"> description = #{product.description},</if>
-                    <if test="product.price != null and product.price >= 0>"> product_name = #{product.price},</if>
+                     price = #{product.price}
                 </trim>
         where
             id = #{product.id}
@@ -43,6 +43,7 @@
             x.product_code,
             x.description,
             x.price,
+            x.status,
             DATE_FORMAT( FROM_UNIXTIME( x.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) AS createTime,
             IF(y.num>0,1,0) AS hasChildren
         FROM

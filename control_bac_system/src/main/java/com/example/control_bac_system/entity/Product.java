@@ -15,4 +15,5 @@ public class Product {
     private String description;
     private String createTime;
     private boolean hasChildren;
+    private Integer status;
 }
