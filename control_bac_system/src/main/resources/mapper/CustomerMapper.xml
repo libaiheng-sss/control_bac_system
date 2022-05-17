@@ -1,0 +1,54 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.control_bac_system.mapper.CustomerMapper">
+
+    <insert id="addCustomer" parameterType="com.example.control_bac_system.entity.Customer" >
+        insert into customer (
+                              customer_id,
+                              username,
+                              phone_number,
+                              email,
+                              province,
+                              city,
+                              district,
+                              detailed_address,
+                              description,
+                              user_id,
+                              update_time,
+                              create_time
+        )value {
+            #{customer.customerId},
+            #{customer.username},
+            #{customer.phoneNumber},
+            #{customer.email},
+            #{customer.province},
+            #{customer.city},
+            #{customer.district},
+            #{customer.detailedAddress},
+            #{customer.description},
+            #{customer.userId},
+            #{customer.updateTime},
+            #{customer.createTime}
+        }
+    </insert>
+    <update id="deleteCustomer" parameterType="com.example.control_bac_system.entity.Customer">
+        update customer set status = #{customer.status} where customerId=#{customer.customerId}
+    </update>
+    <update id="updateCustomer" parameterType="com.example.control_bac_system.entity.Customer">
+        update customer set
+                            username = #{customer.username},
+                            phone_number=#{customer.phoneNumber},
+                            email=#{customer.email},
+                            province=#{customer.province},
+                            city=#{customer.city},
+                            district=#{customer.district},
+                            detailed_address=#{customer.detailedAddress},
+                            description=#{customer.description},
+                            user_id=#{customer.userId},
+                            update_time=#{customer.updateTime}
+        where customerId=#{customer.customerId}
+
+    </update>
+
+</mapper>
