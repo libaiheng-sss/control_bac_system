@@ -2,6 +2,7 @@ package com.example.control_bac_system.mapper;
 
 import com.example.control_bac_system.entity.PageQuery;
 import com.example.control_bac_system.entity.Product;
+import com.example.control_bac_system.entity.vo.OrderProductVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,4 +19,6 @@ public interface ProductMapper {
     List<Product> selectProductByLimit(@Param("pageQuery")  PageQuery pageQuery);
 
     int updateProduct(@Param("product") Product product);
+
+    List<OrderProductVo> selectOrderProductByList(@Param("product") OrderProductVo product);
 }

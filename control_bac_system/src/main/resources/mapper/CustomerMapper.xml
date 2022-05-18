@@ -50,5 +50,28 @@
         where customerId=#{customer.customerId}
 
     </update>
+    <select id="selectCustomerList" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.vo.CustomerVO">
+        SELECT
+            *
+        FROM
+            ( SELECT
+                  c.customer_id,
+                  c.username as customerName,
+                  c.phone_number,
+                  c.email,
+                  c.province,
+                  c.city,
+                  c.district,
+                  c.detailed_address,
+                  c.description,
+                  u.username,
+                  u.`status`,
+                  u.id as userId,
+                  DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime,
+                  DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime
+              FROM customer c LEFT JOIN `user` u ON c.user_id = u.id ) a
+        ORDER BY a.updateTime
+            LIMIT #{pageQuery.start},#{pageQuery.end}
+    </select>
 
 </mapper>

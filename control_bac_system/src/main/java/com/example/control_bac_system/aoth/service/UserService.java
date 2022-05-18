@@ -33,7 +33,7 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在！");
         }
 
-        User user = new User(userInfo.getUsername(),userInfo.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin,normal"));
+        User user = new User(userInfo.getId(),userInfo.getUsername(),userInfo.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin,normal"));
         return user ;
     }
 

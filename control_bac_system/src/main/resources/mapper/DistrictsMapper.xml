@@ -1,0 +1,22 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.control_bac_system.mapper.DistrictsMapper">
+    <select id="selectProvince" resultType="com.example.control_bac_system.entity.Districts">
+        SELECT * from districts WHERE level = 1
+    </select>
+
+    <select id="selectCity" resultType="com.example.control_bac_system.entity.Districts">
+        SELECT * from districts WHERE province_code =#{districts.provinceCode} AND level = 2
+    </select>
+
+    <select id="selectCounty" resultType="com.example.control_bac_system.entity.Districts">
+        SELECT * from districts
+        <where>
+            province_code =#{districts.provinceCode} and level = 3
+            <if test="districts.cityCode != '00'">
+                AND city_code =#{districts.cityCode}
+            </if>
+        </where>
+    </select>
+</mapper>

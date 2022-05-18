@@ -1,5 +1,6 @@
 package com.example.control_bac_system.aoth.entity;
 
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,11 +9,13 @@ import java.util.List;
 
 public class User implements UserDetails {
 
+    private Integer id;
     private String username;
     private String password;
     private List<GrantedAuthority> authorities;
 
-    public User(String username, String password, List<GrantedAuthority> authorities) {
+    public User(Integer id,String username, String password, List<GrantedAuthority> authorities) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.authorities = authorities;
@@ -21,6 +24,10 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.authorities;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     @Override
@@ -52,4 +59,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

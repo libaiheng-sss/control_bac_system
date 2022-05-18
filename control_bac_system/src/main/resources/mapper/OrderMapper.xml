@@ -1,0 +1,35 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.control_bac_system.mapper.OrderMapper">
+
+    <insert id="addOrder" parameterType="com.example.control_bac_system.entity.Order">
+        INSERT INTO `order`(
+            customer_id,
+            order_id,
+            order_status,
+            product_count,
+            product_amount_total,
+            order_amount_total,
+            logistics_fee,
+            pay_time,
+            send_time,
+            order_settlement_time,
+            update_time,
+            create_time
+        ) VALUE(
+            #{order.customerId},
+            #{order.orderId},
+            #{order.orderStatus},
+            #{order.productCount},
+            #{order.productAmountTotal},
+            #{order.orderAmountTotal},
+            #{order.logisticsFee},
+            #{order.payTime},
+            #{order.sendTime},
+            #{order.orderSettlementTime},
+            #{order.updateTime},
+            #{order.createTime}
+        )
+    </insert>
+</mapper>

@@ -3,6 +3,7 @@ package com.example.control_bac_system.service;
 import com.example.control_bac_system.entity.PageQuery;
 import com.example.control_bac_system.entity.PageQueryVo;
 import com.example.control_bac_system.entity.Product;
+import com.example.control_bac_system.entity.vo.OrderProductVo;
 import com.example.control_bac_system.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 
@@ -66,5 +67,25 @@ public class ProductServiceImpl implements ProductService{
     public int updateProduct(Product product) {
         int i = productMapper.updateProduct(product);
         return i;
+    }
+
+    @Override
+    public List<OrderProductVo> getOrderProductList() {
+        OrderProductVo product = new OrderProductVo();
+        product.setId(0);
+        List<OrderProductVo> orderProductVos = productMapper.selectOrderProductByList(product);
+        List<OrderProductVo> allOrderProductList = getAllOrderProductList(orderProductVos);
+        return allOrderProductList;
+    }
+
+    public List<OrderProductVo> getAllOrderProductList(List<OrderProductVo> orderProductVos){
+        for (OrderProductVo product:orderProductVos) {
+            List<OrderProductVo> orderProductVos1 = productMapper.selectOrderProductByList(product);
+            if (null != orderProductVos1 && orderProductVos1.size() >0){
+                getAllOrderProductList(orderProductVos1);
+                product.setChildren(orderProductVos1);
+            }
+        }
+        return orderProductVos;
     }
 }

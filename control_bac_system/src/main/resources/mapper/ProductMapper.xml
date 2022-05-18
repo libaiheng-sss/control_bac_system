@@ -67,4 +67,8 @@
         </if>
 
     </select>
+
+    <select id="selectOrderProductByList" parameterType="com.example.control_bac_system.entity.Product" resultType="com.example.control_bac_system.entity.vo.OrderProductVo">
+        SELECT id,parent_id,IF(price>0,CONCAT(product_name,'[',price,']'),product_name) AS label,product_code AS `value`,price FROM product WHERE parent_id = #{product.id}
+    </select>
 </mapper>
