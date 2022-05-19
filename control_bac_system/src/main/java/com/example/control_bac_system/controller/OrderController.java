@@ -29,6 +29,7 @@ public class OrderController {
     @Resource
     private OrderService orderService;
 
+    @RequestMapping("addOrderAndCustomer")
     public String addOrderAndCustomer(@RequestBody CustomerOrder customerOrder){
         String customerId = UUID.randomUUID().toString().replaceAll("-","");
         String orderId = UUID.randomUUID().toString().replaceAll("-","");
