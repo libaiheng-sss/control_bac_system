@@ -17,7 +17,7 @@
                               user_id,
                               update_time,
                               create_time
-        )value {
+        )value (
             #{customer.customerId},
             #{customer.username},
             #{customer.phoneNumber},
@@ -30,7 +30,7 @@
             #{customer.userId},
             #{customer.updateTime},
             #{customer.createTime}
-        }
+            )
     </insert>
     <update id="deleteCustomer" parameterType="com.example.control_bac_system.entity.Customer">
         update customer set status = #{customer.status} where customerId=#{customer.customerId}

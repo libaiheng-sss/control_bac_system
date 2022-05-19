@@ -11,6 +11,8 @@ import com.example.control_bac_system.service.CustomerService;
 import com.example.control_bac_system.service.OrderService;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,7 +51,7 @@ public class OrderController {
         customer.setCity(customerOrder.getCity());
         customer.setDistrict(customerOrder.getDistrict());
         customer.setDetailedAddress(customerOrder.getDetailedAddress());
-        customer.setUser_id(userId);
+        customer.setUserId(userId);
         customer.setDescription(customerOrder.getDescription());
         customer.setCreateTime(currentTime);
         customer.setUpdateTime(currentTime);

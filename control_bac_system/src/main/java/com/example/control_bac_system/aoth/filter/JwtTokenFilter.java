@@ -5,10 +5,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.control_bac_system.aoth.entity.User;
 import com.example.control_bac_system.model.ResultModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -49,6 +51,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
             // 获取用户名，密码，角色权限
+            Integer id = decodedJwt.getClaim("id").asInt();
             String username = decodedJwt.getClaim("username").asString();
             String password = decodedJwt.getClaim("password").asString();
             List<String> roles = decodedJwt.getClaim("role").asList(String.class);
@@ -56,8 +59,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             roles.forEach(role -> {
                 roleList.add(new SimpleGrantedAuthority(role));
             });
+            User user = new User(id,username,password, AuthorityUtils.commaSeparatedStringToAuthorityList(String.valueOf(roles.toArray())));
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                    new UsernamePasswordAuthenticationToken(username, password, roleList);
+                    new UsernamePasswordAuthenticationToken(user, null, roleList);
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;

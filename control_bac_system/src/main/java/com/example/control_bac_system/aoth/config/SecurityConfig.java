@@ -86,6 +86,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return ((httpServletRequest, httpServletResponse, authentication) -> {
             httpServletResponse.setContentType("application/json;charset=utf-8");
             User user = (User)authentication.getPrincipal();
+            // 用户id
+            Integer id = user.getId();
             // 用户名
             String username = user.getUsername();
             // 密码
@@ -110,6 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .withExpiresAt(expDate)
                     // 主题，自定义
                     .withSubject("demo")
+                    .withClaim("id", id)
                     .withClaim("username", username)
                     .withClaim("password", password)
                     .withArrayClaim("role", roleList.toArray(roles))

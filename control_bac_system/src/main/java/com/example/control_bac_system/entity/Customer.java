@@ -15,7 +15,7 @@ public class Customer {
     private String district;
     private String detailedAddress;
     private String description;
-    private Integer user_id; // 对接人
+    private Integer userId; // 对接人
     private String updateTime;
     private String createTime;
 
