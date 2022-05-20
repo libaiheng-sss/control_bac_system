@@ -23,6 +23,9 @@ public class ProductServiceImpl implements ProductService{
         String code = UUID.randomUUID().toString().replaceAll("-","");
         product.setCreateTime(String.valueOf(currentTime));
         product.setProductCode(code);
+        if (null == product.getParentId()){
+            product.setParentId(0);
+        }
         int i = productMapper.addProduct(product);
         return i;
     }

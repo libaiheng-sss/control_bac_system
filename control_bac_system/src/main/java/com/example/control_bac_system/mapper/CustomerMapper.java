@@ -16,4 +16,9 @@ public interface CustomerMapper {
     int updateCustomer(@Param("customer") Customer customer);
     List<CustomerVO> selectCustomerList(@Param("pageQuery") PageQuery pageQuery);
 
+    List<CustomerVO> selectPersonalCustomer(PageQuery pageQuery);
+
+    List<CustomerVO> selectTeamCustomer(PageQuery pageQuery);
+
+    List<CustomerVO> selectAllCustomer(PageQuery pageQuery);
 }

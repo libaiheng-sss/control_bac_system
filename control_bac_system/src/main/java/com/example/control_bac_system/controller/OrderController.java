@@ -38,6 +38,7 @@ public class OrderController {
         Integer userId = null;
         String currentTime = String.valueOf(System.currentTimeMillis());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User)authentication.getPrincipal();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User principal = (User) authentication.getPrincipal();
             userId = principal.getId();
@@ -60,12 +61,16 @@ public class OrderController {
         order.setCustomerId(customerId);
         order.setOrderId(orderId);
         order.setProductId(customerOrder.getProductId());
-        order.setOrderStatus(customerOrder.getStatus());
+        if (null == customerOrder.getStatus()){
+            order.setOrderStatus(0);
+        }else {
+            order.setOrderStatus(customerOrder.getStatus());
+        }
         order.setProductCount(customerOrder.getProductCount());
         order.setProductAmountTotal(customerOrder.getPrice().multiply(BigDecimal.valueOf(customerOrder.getProductCount())));
         order.setOrderAmountTotal(customerOrder.getOrderAmountTotal());
         order.setLogisticsFee(customerOrder.getLogisticsFee());
-        if (customerOrder.getStatus() == 2){
+        if (null != customerOrder.getStatus() && customerOrder.getStatus() == 2){
             order.setPayTime(currentTime);
         }
         order.setUpdateTime(currentTime);
