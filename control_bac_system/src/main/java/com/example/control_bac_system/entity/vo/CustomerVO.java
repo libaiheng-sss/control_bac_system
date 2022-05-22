@@ -8,10 +8,14 @@ public class CustomerVO {
     private String customerId;
     private String customerName;
     private String phoneNumber;
+    private String gender;
     private String email;
     private String province;
     private String city;
     private String district;
+    private String provinceName;
+    private String cityName;
+    private String districtName;
     private String detailedAddress;
     private String description;
     private String username; // 对接人

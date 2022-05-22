@@ -1,7 +1,6 @@
 package com.example.control_bac_system.entity;
 
 import lombok.Data;
-import org.springframework.data.relational.core.sql.In;
 
 import java.math.BigDecimal;
 
@@ -9,8 +8,10 @@ import java.math.BigDecimal;
 public class Order {
     private Integer id;
     private String customerId;
+    private Integer userId;
     private String orderId;
     private String productId;
+    private BigDecimal price;
     private Integer orderStatus;
     private Integer productCount;
     private BigDecimal productAmountTotal;
@@ -21,4 +22,5 @@ public class Order {
     private String orderSettlementTime;
     private String updateTime;
     private String createTime;
+    private String desc;
 }

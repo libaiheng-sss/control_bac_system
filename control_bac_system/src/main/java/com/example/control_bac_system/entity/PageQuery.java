@@ -16,8 +16,14 @@ public class PageQuery {
     private Integer id;
     // --------------user_list
     private String phoneNumber;
-    private Integer status;
+    private String status;
     // -----------------product
     private boolean hasChildren;
+    // ---------------customer
+    private Integer userId;
+    private Integer teamUserId;
+    private String teamId;
+    // ----------------order
+    private String orderStatus;
 
 }

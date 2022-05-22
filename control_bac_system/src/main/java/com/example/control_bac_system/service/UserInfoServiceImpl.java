@@ -27,7 +27,7 @@ public class UserInfoServiceImpl implements UserInfoService{
         Integer end = page * limit;
         int currentPage = 0;
         Integer total = userMapper.selectUserTotal(pageQuery);
-        if (start >= total){
+        if (start >= total && total >= limit && total != 0){
             start = total - limit;
             end = total;
             currentPage = total/limit;

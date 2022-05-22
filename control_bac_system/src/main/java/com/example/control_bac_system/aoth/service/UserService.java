@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.example.control_bac_system.aoth.entity.User;
 import com.example.control_bac_system.entity.UserInfo;
 import com.example.control_bac_system.mapper.UserMapper;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -34,8 +36,12 @@ public class UserService implements UserDetailsService {
         if (null == userInfo){
             throw new UsernameNotFoundException("用户名不存在！");
         }
-
-        User user = new User(userInfo.getId(),userInfo.getUsername(),userInfo.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList("admin,normal"));
+        List<String> roles = userMapper.selectUserRoleByUserId(userInfo.getId());
+        String newStr = String.join(",", roles);
+        if (userInfo.getUsername().equals("admin")){
+            newStr = "admin";
+        }
+        User user = new User(userInfo.getId(),userInfo.getUsername(),userInfo.getPassword(), AuthorityUtils.commaSeparatedStringToAuthorityList(newStr));
         return user ;
     }
 

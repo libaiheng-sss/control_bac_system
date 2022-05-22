@@ -16,7 +16,11 @@
             send_time,
             order_settlement_time,
             update_time,
-            create_time
+            create_time,
+            price,
+            user_id,
+            `desc`,
+            product_id
         ) VALUE(
             #{order.customerId},
             #{order.orderId},
@@ -29,7 +33,158 @@
             #{order.sendTime},
             #{order.orderSettlementTime},
             #{order.updateTime},
-            #{order.createTime}
+            #{order.createTime},
+            #{order.price},
+            #{order.userId},
+            #{order.desc},
+            #{order.productId}
         )
     </insert>
+    <select id="selectPersonalOrder" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.vo.OrderVo">
+        select
+            *
+        from
+            (
+        select
+        o.user_id,
+        o.order_id,
+        o.customer_id,
+        t.team_id,
+        c.username as customerName,
+        u.username,
+        p.product_name,
+        o.price,
+        o.product_count,
+        o.product_amount_total,
+        o.logistics_fee,
+        o.order_amount_total,
+        o.order_status,
+        o.desc,
+        if(o.pay_time is null,'--',DATE_FORMAT( FROM_UNIXTIME( o.pay_time / 1000 ), '%Y-%m-%d %H:%i:%s' )) as payTime,
+        if(o.send_time is null,'--',DATE_FORMAT( FROM_UNIXTIME( o.send_time / 1000 ), '%Y-%m-%d %H:%i:%s' )) as sendTime,
+        if(o.order_settlement_time is null,'--',DATE_FORMAT( FROM_UNIXTIME( o.order_settlement_time / 1000 ), '%Y-%m-%d %H:%i:%s' )) as orderSettlementTime,
+        if(o.update_time is null,'--',DATE_FORMAT( FROM_UNIXTIME( o.update_time / 1000 ), '%Y-%m-%d %H:%i:%s' )) as updateTime,
+        if(o.create_time is null,'--',DATE_FORMAT( FROM_UNIXTIME( o.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' )) as createTime
+        from `order` o
+        left join customer c on c.customer_id = o.customer_id
+        left join product p on p.id = o.product_id
+        left join user u on o.user_id = u.id
+        left join team t on o.user_id = t.user_id
+        <where>
+            <if test="pageQuery.beginTime != null and pageQuery.beginTime != '' and pageQuery.endTime != null and pageQuery.endTime != ''">
+                o.create_time between #{pageQuery.beginTime} and #{pageQuery.endTime}
+            </if>
+        </where>
+            ) tem
+        <where>
+            user_id = #{pageQuery.userId}
+            <if test="pageQuery.orderStatus != null and pageQuery.orderStatus != ''">
+                and order_status = #{pageQuery.orderStatus}
+            </if>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                and phone_number = #{pageQuery.phoneNumber}
+            </if>
+        </where>
+        ORDER BY tem.createTime
+        LIMIT #{pageQuery.start},#{pageQuery.end}
+    </select>
+    <select id="selectPersonalOrderTotal" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="java.lang.Integer">
+        select count(1) from (
+        select
+        *
+        from
+        (
+        select
+        o.user_id,
+        o.order_id,
+        o.customer_id,
+        t.team_id,
+        c.username as customerName,
+        u.username,
+        p.product_name,
+        o.price,
+        o.product_count,
+        o.product_amount_total,
+        o.logistics_fee,
+        o.order_amount_total,
+        o.order_status,
+        DATE_FORMAT( FROM_UNIXTIME( o.pay_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as payTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.send_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as sendTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.order_settlement_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as orderSettlementTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.update_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime
+        from `order` o
+        left join customer c on c.customer_id = o.customer_id
+        left join product p on p.id = o.product_id
+        left join user u on o.user_id = u.id
+        left join team t on o.user_id = t.user_id
+        <where>
+            <if test="pageQuery.beginTime != null and pageQuery.beginTime != '' and pageQuery.endTime != null and pageQuery.endTime != ''">
+                o.create_time between #{pageQuery.beginTime} and #{pageQuery.endTime}
+            </if>
+        </where>
+        ) tem
+        <where>
+            user_id = #{pageQuery.userId}
+            <if test="pageQuery.status != null and pageQuery.status != ''">
+                and status = #{pageQuery.status}
+            </if>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                and phone_number = #{pageQuery.phoneNumber}
+            </if>
+        </where>
+                             ) tem2
+    </select>
+    <select id="selectAllOrder" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.vo.OrderVo">
+        select
+        *
+        from
+        (
+        select
+        o.user_id,
+        o.order_id,
+        o.customer_id,
+        t.team_id,
+        c.username as customerName,
+        u.username,
+        p.product_name,
+        o.price,
+        o.product_count,
+        o.product_amount_total,
+        o.logistics_fee,
+        o.order_amount_total,
+        o.order_status,
+        DATE_FORMAT( FROM_UNIXTIME( o.pay_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as payTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.send_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as sendTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.order_settlement_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as orderSettlementTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.update_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime,
+        DATE_FORMAT( FROM_UNIXTIME( o.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime
+        from `order` o
+        left join customer c on c.customer_id = o.customer_id
+        left join product p on p.id = o.product_id
+        left join user u on o.user_id = u.id
+        left join team t on o.user_id = t.user_id
+        <where>
+            <if test="pageQuery.beginTime != null and pageQuery.beginTime != '' and pageQuery.endTime != null and pageQuery.endTime != ''">
+                o.create_time between #{pageQuery.beginTime} and #{pageQuery.endTime}
+            </if>
+        </where>
+        ) tem
+        <where>
+            <if test="pageQuery.userId != null and pageQuery.userId != ''">
+                and user_id = #{pageQuery.userId}
+            </if>
+            <if test="pageQuery.teamId != null and pageQuery.teamId != ''">
+                and teamId = #{pageQuery.teamId}
+            </if>
+            <if test="pageQuery.status != null and pageQuery.status != ''">
+                and status = #{pageQuery.status}
+            </if>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                and phone_number = #{pageQuery.phoneNumber}
+            </if>
+        </where>
+        ORDER BY temp.createTime
+    </select>
+
 </mapper>

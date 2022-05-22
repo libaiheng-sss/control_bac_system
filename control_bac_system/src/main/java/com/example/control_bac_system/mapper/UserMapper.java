@@ -29,4 +29,6 @@ public interface UserMapper {
 
     int updatePassword(@Param("userInfo") UserInfo userInfo);
 
+    List<String> selectUrlsByRoles(@Param("roles") List<String> roles);
+    List<String> selectAllUrlsByRoles();
 }

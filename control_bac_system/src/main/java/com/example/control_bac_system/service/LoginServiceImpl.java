@@ -18,6 +18,9 @@ public class LoginServiceImpl implements LoginService{
     public String getInfo(String username) {
         UserInfo user = userMapper.selectUserByUsername(username);
         List<String> roles = userMapper.selectUserRoleByUserId(user.getId());
+        if (username.equals("admin")){
+            roles.add("admin");
+        }
         UserInfoVo userInfoVo = new UserInfoVo();
         userInfoVo.setUsername(username);
         userInfoVo.setRoles(roles);

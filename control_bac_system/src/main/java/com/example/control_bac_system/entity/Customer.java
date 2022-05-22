@@ -16,6 +16,8 @@ public class Customer {
     private String detailedAddress;
     private String description;
     private Integer userId; // 对接人
+    private Integer status; // 对接人
+    private Integer gender;
     private String updateTime;
     private String createTime;
 

@@ -2,9 +2,7 @@ package com.example.control_bac_system.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.control_bac_system.aoth.entity.User;
-import com.example.control_bac_system.entity.Customer;
-import com.example.control_bac_system.entity.Order;
-import com.example.control_bac_system.entity.Product;
+import com.example.control_bac_system.entity.*;
 import com.example.control_bac_system.entity.dto.CustomerOrder;
 import com.example.control_bac_system.model.ResultModel;
 import com.example.control_bac_system.service.CustomerService;
@@ -38,7 +36,6 @@ public class OrderController {
         Integer userId = null;
         String currentTime = String.valueOf(System.currentTimeMillis());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User)authentication.getPrincipal();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             User principal = (User) authentication.getPrincipal();
             userId = principal.getId();
@@ -70,6 +67,7 @@ public class OrderController {
         order.setProductAmountTotal(customerOrder.getPrice().multiply(BigDecimal.valueOf(customerOrder.getProductCount())));
         order.setOrderAmountTotal(customerOrder.getOrderAmountTotal());
         order.setLogisticsFee(customerOrder.getLogisticsFee());
+        order.setUserId(userId);
         if (null != customerOrder.getStatus() && customerOrder.getStatus() == 2){
             order.setPayTime(currentTime);
         }
@@ -77,5 +75,66 @@ public class OrderController {
         order.setCreateTime(currentTime);
         int b = orderService.addOrder(order);
         return null;
+    }
+
+    @RequestMapping("addOrder")
+    public String addOrder(@RequestBody Order order){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User principal = (User) authentication.getPrincipal();
+            order.setUserId(principal.getId());
+        }
+        String orderId = UUID.randomUUID().toString().replaceAll("-","");
+        String currentTime = String.valueOf(System.currentTimeMillis());
+        order.setOrderId(orderId);
+        order.setUpdateTime(currentTime);
+        order.setCreateTime(currentTime);
+        order.setOrderStatus(0);
+        if (null == order.getPrice()){
+            order.setPrice(new BigDecimal(0));
+        }
+        if (null == order.getCustomerId() || !order.getCustomerId().isEmpty()){
+            String success = ResultModel.SUCCESS("300", "添加订单失败", null);
+        }
+        order.setProductAmountTotal(order.getPrice().multiply(BigDecimal.valueOf(order.getProductCount())));
+       Integer i = orderService.addOrder(order);
+        String success = ResultModel.SUCCESS("200", "添加订单成功", i);
+        return success;
+    }
+
+    @RequestMapping("personal")
+    public String getPersonalOrder(@RequestBody PageQuery pageQuery){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User principal = (User) authentication.getPrincipal();
+            pageQuery.setUserId(principal.getId());
+        }
+        PageQueryVo pageQueryVo = orderService.selectPersonalOrder(pageQuery);
+        String success = ResultModel.SUCCESS("200", "获取个人客户列表成功", pageQueryVo);
+        return success;
+    }
+
+    @RequestMapping("team")
+    public String getTeamOrder(@RequestBody PageQuery pageQuery){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User principal = (User) authentication.getPrincipal();
+            pageQuery.setUserId(principal.getId());
+        }
+        PageQueryVo pageQueryVo = orderService.selectTeamOrder(pageQuery);
+        String success = ResultModel.SUCCESS("200", "获取团队客户列表成功", pageQueryVo);
+        return success;
+    }
+
+    @RequestMapping("all")
+    public String getAllOrder(@RequestBody PageQuery pageQuery){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+            User principal = (User) authentication.getPrincipal();
+            pageQuery.setUserId(principal.getId());
+        }
+        PageQueryVo pageQueryVo = orderService.selectAllOrder(pageQuery);
+        String success = ResultModel.SUCCESS("200", "获取团队客户列表成功", pageQueryVo);
+        return success;
     }
 }

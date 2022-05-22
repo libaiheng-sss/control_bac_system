@@ -7,6 +7,7 @@
         insert into customer (
                               customer_id,
                               username,
+                              gender,
                               phone_number,
                               email,
                               province,
@@ -20,6 +21,7 @@
         )value (
             #{customer.customerId},
             #{customer.username},
+            #{customer.gender},
             #{customer.phoneNumber},
             #{customer.email},
             #{customer.province},
@@ -39,6 +41,7 @@
         update customer set
                             username = #{customer.username},
                             phone_number=#{customer.phoneNumber},
+                            gender = #{customer.gender},
                             email=#{customer.email},
                             province=#{customer.province},
                             city=#{customer.city},
@@ -46,32 +49,254 @@
                             detailed_address=#{customer.detailedAddress},
                             description=#{customer.description},
                             user_id=#{customer.userId},
+                            status=#{customer.status},
                             update_time=#{customer.updateTime}
-        where customerId=#{customer.customerId}
+        where customer_id=#{customer.customerId}
 
     </update>
     <select id="selectCustomerList" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.vo.CustomerVO">
         SELECT
             *
         FROM
-            ( SELECT
-                  c.customer_id,
-                  c.username as customerName,
-                  c.phone_number,
-                  c.email,
-                  c.province,
-                  c.city,
-                  c.district,
-                  c.detailed_address,
-                  c.description,
-                  u.username,
-                  u.`status`,
-                  u.id as userId,
-                  DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime,
-                  DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime
-              FROM customer c LEFT JOIN `user` u ON c.user_id = u.id ) a
+            (
+                SELECT
+                    c.customer_id,
+                    c.username as customerName,
+                    c.phone_number,
+                    c.email,
+                    d1.name as provinceName,
+                    d2.name as cityName,
+                    d3.name as districtName,
+                    c.province,
+                    c.city,
+                    c.district,
+                    c.detailed_address,
+                    c.description,
+                    u.username,
+                    u.`status`,
+                    u.id as userId,
+                    DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime,
+                    DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime
+                FROM customer c
+             LEFT JOIN `user` u ON c.user_id = u.id
+             left join districts d1 on d1.province_code = c.province and d1.level = 1
+             left join districts d2 on d2.province_code = c.province and d2.city_code = c.city and d2.level = 2
+             left join districts d3 on d3.province_code = c.province and d3.county_code = c.district and d3.level = 3
+            ) a
+        WHERE userId = #{pageQuery.userId}
+        ORDER BY a.updateTime
+        LIMIT #{pageQuery.start},#{pageQuery.end}
+    </select>
+
+    <select id="selectPersonalCustomer" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.vo.CustomerVO">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    c.customer_id,
+                    c.gender,
+                    c.username as customerName,
+                    c.phone_number,
+                    c.email,
+                    d1.name as provinceName,
+                    d2.name as cityName,
+                    d3.name as districtName,
+                    c.province,
+                    c.city,
+                    c.district,
+                    c.detailed_address,
+                    c.description,
+                    u.username,
+                    c.`status`,
+                    u.id as userId,
+                    DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime,
+                    DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime
+                FROM customer c
+                         LEFT JOIN `user` u ON c.user_id = u.id
+                         left join districts d1 on d1.province_code = c.province and d1.level = 1
+                         left join districts d2 on d2.province_code = c.province and d2.city_code = c.city and d2.county_code = '00' and d2.level = 2
+                         left join districts d3 on d3.province_code = c.province and d3.city_code = c.city and d3.county_code = c.district and d3.level = 3
+                <where>
+                    <if test="pageQuery.beginTime != null and pageQuery.beginTime != '' and pageQuery.endTime != null and pageQuery.endTime != ''">
+                        c.create_time between #{pageQuery.beginTime} and #{pageQuery.endTime}
+                    </if>
+                </where>
+            ) a
+        <where>
+            userId = #{pageQuery.userId}
+        <if test="pageQuery.status != null and pageQuery.status != ''">
+            and status = #{pageQuery.status}
+        </if>
+        <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+            and phone_number = #{pageQuery.phoneNumber}
+        </if>
+
+        </where>
         ORDER BY a.updateTime
             LIMIT #{pageQuery.start},#{pageQuery.end}
     </select>
 
+    <select id="selectTeamCustomer" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.vo.CustomerVO">
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        c.customer_id,
+        c.gender,
+        c.username as customerName,
+        c.phone_number,
+        c.email,
+        d1.name as provinceName,
+        d2.name as cityName,
+        d3.name as districtName,
+        c.province,
+        c.city,
+        c.district,
+        c.detailed_address,
+        c.description,
+        u.username,
+        c.`status`,
+        u.id as userId,
+        DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime,
+        DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime
+        FROM customer c
+        LEFT JOIN `user` u ON c.user_id = u.id
+        left join districts d1 on d1.province_code = c.province and d1.level = 1
+        left join districts d2 on d2.province_code = c.province and d2.city_code = c.city and d2.county_code = '00' and d2.level = 2
+        left join districts d3 on d3.province_code = c.province and d3.city_code = c.city and d3.county_code = c.district and d3.level = 3
+        <where>
+            <if test="pageQuery.beginTime != null and pageQuery.beginTime != '' and pageQuery.endTime != null and pageQuery.endTime != ''">
+                c.create_time between #{pageQuery.beginTime} and #{pageQuery.endTime}
+            </if>
+        </where>
+        ) a
+        <where>
+            userId IN (select user_id from team where team_id = (select team_id from team where user_id = #{pageQuery.userId}) <if
+                test="pageQuery.teamUserId != null and pageQuery.teamUserId != ''"> and user_id = #{pageQuery.teamUserId}</if>)
+            <if test="pageQuery.status != null and pageQuery.status != ''">
+                and status = #{pageQuery.status}
+            </if>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                and phone_number = #{pageQuery.phoneNumber}
+            </if>
+
+        </where>
+        ORDER BY a.updateTime
+        LIMIT #{pageQuery.start},#{pageQuery.end}
+    </select>
+
+    <select id="selectAllCustomer" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.vo.CustomerVO">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    c.customer_id,
+                    c.gender,
+                    c.username as customerName,
+                    c.phone_number,
+                    c.email,
+                    d1.name as province,
+                    d2.name as city,
+                    d3.name as district,
+                    c.detailed_address,
+                    c.description,
+                    u.username,
+                    c.`status`,
+                    u.id as userId,
+                    t.team_id,
+                    DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime,
+                    DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime
+                FROM customer c
+                         LEFT JOIN `user` u ON c.user_id = u.id
+                         left join districts d1 on d1.province_code = c.province and d1.level = 1
+                         left join districts d2 on d2.province_code = c.province and d2.city_code = c.city and d2.level = 2
+                         left join districts d3 on d3.province_code = c.province and d3.county_code = c.district and d3.level = 3
+                         left join team t on t.user_id = c.user_id
+            ) a
+        ORDER BY a.updateTime
+        <where>
+            <if test="pageQuery.teamId != null and pageQuery.teamId != ''">
+                team_id = #{pageQuery.teamId}
+            </if>
+            <if test="pageQuery.status != null and pageQuery.status != ''">
+                and status = #{pageQuery.status}
+            </if>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                and phone_number = #{pageQuery.phoneNumber}
+            </if>
+        </where>
+            LIMIT #{pageQuery.start},#{pageQuery.end}
+    </select>
+
+    <select id="selectPersonalCustomerTotal" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="java.lang.Integer">
+       select count(1) from (
+        SELECT
+        *
+        FROM
+        (
+        SELECT
+        c.customer_id,
+        c.gender,
+        c.username as customerName,
+        c.phone_number,
+        c.email,
+        d1.name as provinceName,
+        d2.name as cityName,
+        d3.name as districtName,
+        c.province,
+        c.city,
+        c.district,
+        c.detailed_address,
+        c.description,
+        u.username,
+        c.`status`,
+        u.id as userId,
+        DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as createTime,
+        DATE_FORMAT( FROM_UNIXTIME( c.create_time / 1000 ), '%Y-%m-%d %H:%i:%s' ) as updateTime
+        FROM customer c
+        LEFT JOIN `user` u ON c.user_id = u.id
+        left join districts d1 on d1.province_code = c.province and d1.level = 1
+        left join districts d2 on d2.province_code = c.province and d2.city_code = c.city and d2.county_code = '00' and d2.level = 2
+        left join districts d3 on d3.province_code = c.province and d3.city_code = c.city and d3.county_code = c.district and d3.level = 3
+        <where>
+            <if test="pageQuery.beginTime != null and pageQuery.beginTime != '' and pageQuery.endTime != null and pageQuery.endTime != ''">
+                c.create_time between #{pageQuery.beginTime} and #{pageQuery.endTime}
+            </if>
+        </where>
+        ) a
+        <where>
+            userId = #{pageQuery.userId}
+            <if test="pageQuery.status != null and pageQuery.status != ''">
+                and status = #{pageQuery.status}
+            </if>
+            <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
+                and phone_number = #{pageQuery.phoneNumber}
+            </if>
+        </where>
+                            )  a
+    </select>
+
+    <select id="selectAllCustomerTotal" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="java.lang.Integer">
+        select COUNT(1) from customer
+    </select>
+
+    <select id="selectTeamCustomerTotal" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="java.lang.Integer">
+        select COUNT(1) from customer where user_id in (select user_id from team where team_id = (select team_id from team where user_id = #{pageQuery.userId}))
+    </select>
+
+    <select id="selectTeamUserId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+
+    </select>
+
+    <select id="getTeamUser" parameterType="java.lang.Integer" resultType="com.example.control_bac_system.entity.UserInfo">
+
+        select u.id,u.username from (select user_id from team where team_id = (select team_id from team where user_id =  #{userId})) a
+                                        left join user u on  a.user_id = u.id
+    </select>
+    <select id="getTeamList" resultType="com.example.control_bac_system.entity.vo.Team">
+        select id,team_id,team_name,user_id from team
+    </select>
 </mapper>

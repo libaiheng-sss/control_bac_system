@@ -2,6 +2,7 @@ package com.example.control_bac_system.mapper;
 
 import com.example.control_bac_system.entity.Order;
 import com.example.control_bac_system.entity.PageQuery;
+import com.example.control_bac_system.entity.vo.CustomerVO;
 import com.example.control_bac_system.entity.vo.OrderVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,4 +21,10 @@ public interface OrderMapper {
     // 查询订单
     List<OrderVo> selectOrderList(@Param("pageQuery") PageQuery pageQuery);
 
+    List<OrderVo> selectPersonalOrder(@Param("pageQuery") PageQuery pageQuery);
+    Integer selectPersonalOrderTotal(@Param("pageQuery") PageQuery pageQuery);
+    List<OrderVo> selectTeamOrder(@Param("pageQuery") PageQuery pageQuery);
+    Integer selectTeamOrderTotal(@Param("pageQuery") PageQuery pageQuery);
+    List<OrderVo> selectAllOrder(@Param("pageQuery") PageQuery pageQuery);
+    Integer selectAllOrderTotal(@Param("pageQuery") PageQuery pageQuery);
 }

@@ -7,7 +7,12 @@
     </select>
 
     <select id="selectUserRoleByUserId" parameterType="java.lang.Integer" resultType="java.lang.String">
-        select r.role_name from user_role ur left join role r on r.id = ur.role_id where ur.user_id = #{userId}
+        select permission_code from permissoin p
+        left join role_permission rp on rp.permission_id = p.id
+        left join role r on r.id = rp.role_id
+        left outer join user_role ur on r.id = ur.role_id
+        left join user u on u.id = ur.user_id
+        where u.id =  #{userId}
     </select>
 
     <select id="selectAllUserInfo" parameterType="com.example.control_bac_system.entity.PageQuery" resultType="com.example.control_bac_system.entity.UserInfo">
@@ -25,7 +30,7 @@
             <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
                 phoneNumber = #{pageQuery.phoneNumber}
             </if>
-            <if test="pageQuery.status != null and pageQuery.status >= 0">
+            <if test="pageQuery.status != null and pageQuery.status != ''">
                 and status = #{pageQuery.status}
             </if>
         </where>
@@ -42,7 +47,7 @@
             <if test="pageQuery.phoneNumber != null and pageQuery.phoneNumber != ''">
                 phoneNumber = #{pageQuery.phoneNumber}
             </if>
-            <if test="pageQuery.status != null and pageQuery.status >= 0">
+            <if test="pageQuery.status != null and pageQuery.status != ''">
                 and status = #{pageQuery.status}
             </if>
         </where>
@@ -70,4 +75,22 @@
     <update id="updatePassword" parameterType="com.example.control_bac_system.entity.UserInfo">
         update user set password=#{userInfo.password} where id = #{userInfo.id}
     </update>
+
+    <select id="selectUrlsByRoles" parameterType="java.util.List" resultType="java.lang.String">
+<!--        select p.permission_value from permissoin p-->
+<!--        left join role_permission rp on rp.permission_id = p.id-->
+<!--        left join role r on r.id = rp.role_id-->
+<!--        where r.role_name in-->
+<!--        <foreach item="item" collection="roles" separator="," open="(" close=")" index="">-->
+<!--            #{item}-->
+<!--        </foreach>-->
+        select permission_value from permissoin where permission_code in
+        <foreach item="item" collection="roles" separator="," open="(" close=")" index="">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="selectAllUrlsByRoles" resultType="java.lang.String">
+        select permission_value from permissoin
+    </select>
 </mapper>
