@@ -8,4 +8,6 @@ public class Team {
     private String teamId;
     private String teamName;
     private String userId;
+    private String updateTime;
+    private String createTime;
 }

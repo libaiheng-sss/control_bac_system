@@ -3,6 +3,7 @@ package com.example.control_bac_system.service;
 import com.example.control_bac_system.entity.PageQuery;
 import com.example.control_bac_system.entity.PageQueryVo;
 import com.example.control_bac_system.entity.UserInfo;
+import com.example.control_bac_system.entity.vo.UserInfoVo;
 import com.example.control_bac_system.mapper.UserMapper;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -64,5 +65,11 @@ public class UserInfoServiceImpl implements UserInfoService{
     public Integer deleteUser(Integer id, Integer status) {
         int i = userMapper.deleteUser(id,status);
         return i;
+    }
+
+    @Override
+    public List<UserInfoVo> getAllUser() {
+        List<UserInfoVo> userInfoVoList = userMapper.selectAllUserInfoList();
+        return userInfoVoList;
     }
 }

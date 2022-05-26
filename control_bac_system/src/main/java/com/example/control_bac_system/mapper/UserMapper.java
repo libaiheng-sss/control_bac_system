@@ -2,6 +2,7 @@ package com.example.control_bac_system.mapper;
 
 import com.example.control_bac_system.entity.PageQuery;
 import com.example.control_bac_system.entity.UserInfo;
+import com.example.control_bac_system.entity.vo.UserInfoVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -31,4 +32,6 @@ public interface UserMapper {
 
     List<String> selectUrlsByRoles(@Param("roles") List<String> roles);
     List<String> selectAllUrlsByRoles();
+
+    List<UserInfoVo> selectAllUserInfoList();
 }

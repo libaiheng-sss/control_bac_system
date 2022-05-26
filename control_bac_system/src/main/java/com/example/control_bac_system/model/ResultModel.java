@@ -17,6 +17,13 @@ public class ResultModel {
         return jsonObject.toJSONString();
     }
 
+    public static String loginError(String code,String message){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("code",code);
+        jsonObject.put("message",message);
+        return jsonObject.toJSONString();
+    }
+
     public static String SUCCESS(String code,String message,Object data){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code",code);

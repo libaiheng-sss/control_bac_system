@@ -93,4 +93,10 @@
     <select id="selectAllUrlsByRoles" resultType="java.lang.String">
         select permission_value from permissoin
     </select>
+    <select id="selectAllUserInfoList" resultType="com.example.control_bac_system.entity.vo.UserInfoVo">
+        select id,username,phoneNumber,email,status,
+            DATE_FORMAT(FROM_UNIXTIME(updateTime/1000),'%Y-%m-%d %H:%i:%s') as updateTime,
+                DATE_FORMAT(FROM_UNIXTIME(createTime/1000),'%Y-%m-%d %H:%i:%s') as createTime
+        from user where status = 0
+    </select>
 </mapper>

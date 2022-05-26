@@ -1,0 +1,36 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.control_bac_system.mapper.UserMapper">
+
+    <select id="selectTeamsTolal" resultType="java.lang.Integer">
+        select count(1) from team
+    </select>
+    
+    <select id="selectTeamsPage" parameterType="com.example.control_bac_system.entity.PageQuery"
+    resultType="com.example.control_bac_system.entity.vo.Team">
+        select
+            team_id,
+            team_name,
+            user_id,
+            DATE_FORMAT(FROM_UNIXTIME(update_time/1000),'%Y-%m-%d %H:%i:%s') as updateTime,
+            DATE_FORMAT(FROM_UNIXTIME(create_time/1000),'%Y-%m-%d %H:%i:%s') as createTime
+        from team
+        order by create_time desc
+            limit #{pageQuery.start},#{pageQuery.end}
+    </select>
+
+    <insert id="insertTeam" parameterType="com.example.control_bac_system.entity.vo.Team">
+        insert into team(team_id,
+                         team_name,
+                         user_id,
+                         update_time,
+                         create_time)
+                         value (#{team.teamId},#{team.teamName},#{team.userId},#{team.updateTime},#{team.createTime})
+    </insert>
+
+    <update id="updateTeam" parameterType="com.example.control_bac_system.entity.vo.Team">
+        update team set team_name = #{team.teamName} ,user_id = #{team.userId}
+    </update>
+
+</mapper>

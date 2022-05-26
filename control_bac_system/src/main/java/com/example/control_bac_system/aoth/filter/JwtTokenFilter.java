@@ -53,7 +53,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 decodedJwt = jwtVerifier.verify(jwt);
             } catch (Exception e) {
                 e.printStackTrace();
-                returnResponse(httpServletResponse,"token 认证失败~");
+                returnResponse(httpServletResponse,ResultModel.loginError("1200","token 认证失败~"));
                 return;
             }
             // 获取用户名，密码，角色权限
@@ -67,7 +67,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                     List<String> allUserList = userMapper.selectAllUrlsByRoles();
                     boolean b = checkUrl(path.replace("/dev-api",""), urlList,allUserList);
                     if (!b){
-                        returnResponse(httpServletResponse,"没有权限~");
+                        returnResponse(httpServletResponse,ResultModel.Error("没有权限~"));
                         return;
                     }
                 }
@@ -84,14 +84,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
             return;
         }
-        returnResponse(httpServletResponse,"token 认证失败~");
+        returnResponse(httpServletResponse,ResultModel.loginError("1200","token 认证失败~"));
     }
 
     public void returnResponse(HttpServletResponse httpServletResponse,String txt) throws IOException {
-        String s = ResultModel.Error(txt);
         httpServletResponse.setContentType("application/json;charset=utf-8");
         PrintWriter printWriter = httpServletResponse.getWriter();
-        printWriter.write(s);
+        printWriter.write(txt);
         printWriter.flush();
         printWriter.close();
     }
